@@ -3210,13 +3210,6 @@ details[open] .faq-chevron {
   .bento-stat-card {
     grid-column: span 1;
   }
-  .bento-stat-card--wide {
-    grid-column: 1 / -1;
-  }
-  .bento-card:nth-child(3) {
-    grid-column: 1 / -1; /* Make Card 3 (Token Usage) span full width on tablet */
-  }
-
   .pricing-cards {
     grid-template-columns: 1fr;
     max-width: 400px;
@@ -3261,8 +3254,7 @@ details[open] .faq-chevron {
   /* Reset all bento column overrides on mobile (hidden anyway) */
   .bento-card--wide,
   .bento-card--tall,
-  .bento-card--accent,
-  .bento-card:nth-child(3) {
+  .bento-card--accent {
     grid-column: auto;
     grid-row: auto;
   }

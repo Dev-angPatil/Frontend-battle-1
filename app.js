@@ -491,20 +491,6 @@ function setCircularGauge(pct) {
 }
 
 /**
- * Animates the arc gauge fill and centre number.
- * @param {number} pct - 0 to 100
- */
-function setArcGauge(pct) {
-  const fill = document.getElementById('arc-fill');
-  const num  = document.getElementById('arc-num');
-  if (!fill || !num) return;
-  const total = 251; // measured arc length for the SVG path
-  const offset = total - (pct / 100) * total;
-  fill.style.strokeDashoffset = offset;
-  num.textContent = Math.round(280 + pct * 1.5);
-}
-
-/**
  * Draws a smooth SVG line chart path given y-values.
  * @param {number[]} data - normalised 0–100
  */
@@ -549,7 +535,6 @@ function initStatsDashboard() {
 
   // Initial render
   setCircularGauge(85);
-  setArcGauge(78);
 
   // Growth line: simulate 30-day upward trend with noise
   const baseData = Array.from({ length: 20 }, (_, i) =>
@@ -570,16 +555,6 @@ function initStatsDashboard() {
     if (sysCache) sysCache.textContent = `${cachePct}%`;
     const sysLoadEl = document.getElementById('sys-load-pct');
     if (sysLoadEl) sysLoadEl.textContent = `${sysLoad.toFixed(1)}%`;
-
-    // Arc gauge — fluctuates around 75%
-    const tokenLoad = fluctuate(75, 25);
-    setArcGauge(tokenLoad);
-    const queries = Math.round(140 + Math.random() * 30);
-    const nodes   = Math.round(100 + Math.random() * 30);
-    const qEl = document.getElementById('arc-queries');
-    const nEl = document.getElementById('arc-nodes');
-    if (qEl) qEl.textContent = queries;
-    if (nEl) nEl.textContent = nodes;
 
     // Rebuild bar chart every 6 ticks (12 seconds)
     if (tick % 6 === 0) buildBarChart();
