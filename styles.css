@@ -500,12 +500,12 @@ input, select, textarea {
   letter-spacing: 0.04em;
 }
 
-/* Hero Terminal */
 .hero-visual {
   position: relative;
   z-index: 1;
   display: flex;
   justify-content: flex-end;
+  margin-top: -60px; /* Shift the visual container slightly above for better desktop alignment */
 }
 
 .hero-terminal {
@@ -2316,7 +2316,10 @@ details[open] .faq-chevron {
     min-height: auto;
     padding-bottom: var(--space-2xl);
   }
-  .hero-visual { justify-content: flex-start; }
+  .hero-visual {
+    justify-content: flex-start;
+    margin-top: 0; /* Reset negative margin on mobile/stacked layouts */
+  }
 
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
