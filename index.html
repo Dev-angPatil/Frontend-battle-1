@@ -223,128 +223,170 @@
     </section>
 
     <!-- ============================================================
-         SECTION 3: FEATURES — BENTO GRID / ACCORDION
+         SECTION 3: FEATURES — STATS DASHBOARD BENTO / ACCORDION
          ============================================================ -->
     <section id="features" class="features-section" aria-labelledby="features-heading">
       <div class="section-header">
         <div class="section-eyebrow">
-          <img src="reference/SVGs/search.svg" alt="" aria-hidden="true" width="16" height="16" class="eyebrow-icon" />
-          <span>PRODUCT FEATURES</span>
+          <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="16" height="16" class="eyebrow-icon" />
+          <span>PRODUCT STATISTICS</span>
         </div>
-        <h2 id="features-heading" class="section-title">Engineered for<br />autonomy</h2>
-        <p class="section-subtitle">Go beyond simple chat interfaces. Armory provides the underlying architecture to build, test, and scale enterprise-grade agents.</p>
+        <h2 id="features-heading" class="section-title">Optimized for<br />performance</h2>
+        <p class="section-subtitle">Monitor every neural pulse in real-time. Armory provides deep telemetry into agent accuracy, server latency, and token efficiency.</p>
       </div>
 
-      <!-- DESKTOP BENTO GRID -->
-      <div class="bento-grid" id="bento-grid" data-active-index="-1" aria-label="Product features" role="list">
+      <!-- DESKTOP BENTO GRID — Live Stats Dashboard -->
+      <div class="bento-grid" id="bento-grid" data-active-index="-1" aria-label="Product statistics" role="list">
 
-        <article class="bento-card bento-card--wide" data-index="0" role="listitem" tabindex="0" aria-label="Discovery feature">
-          <div class="bento-card-icon">
-            <img src="reference/SVGs/search.svg" alt="" aria-hidden="true" width="28" height="28" />
+        <!-- Card 1: System Load — Circular Gauge -->
+        <article class="bento-card bento-stat-card" data-index="0" role="listitem" tabindex="0" aria-label="System Load statistics">
+          <div class="stat-card-header">
+            <div class="stat-card-icon"><img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="18" height="18" /></div>
+            <span class="stat-card-label">System Load</span>
+            <span class="stat-card-value" id="sys-load-pct">98.7%</span>
           </div>
-          <h3 class="bento-card-title">Discovery</h3>
-          <p class="bento-card-desc">Find and ingest data from any source. Our neural crawlers index structured and unstructured data at enterprise scale.</p>
-          <div class="bento-card-tag">INGESTION LAYER</div>
+          <p class="stat-card-desc">Active neural processing</p>
+          <div class="gauge-wrap" aria-hidden="true">
+            <svg class="circular-gauge" viewBox="0 0 120 120" width="150" height="150">
+              <circle class="gauge-track" cx="60" cy="60" r="50" />
+              <circle class="gauge-fill" id="sys-gauge-fill" cx="60" cy="60" r="50" stroke-dasharray="314" stroke-dashoffset="47" />
+              <text class="gauge-number" id="sys-gauge-num" x="60" y="57" text-anchor="middle" dominant-baseline="middle">15</text>
+              <text class="gauge-sublabel" x="60" y="76" text-anchor="middle">Core Systems</text>
+            </svg>
+            <div class="gauge-meta">
+              <div><span class="meta-val" id="sys-cache">99%</span><span class="meta-key">CACHE</span></div>
+              <div><span class="meta-val">6M</span><span class="meta-key">UPTIME</span></div>
+            </div>
+          </div>
         </article>
 
-        <article class="bento-card bento-card--tall" data-index="1" role="listitem" tabindex="0" aria-label="Analysis feature">
-          <div class="bento-card-icon">
-            <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="28" height="28" />
+        <!-- Card 2: SLA Response — Bar Chart -->
+        <article class="bento-card bento-stat-card" data-index="1" role="listitem" tabindex="0" aria-label="SLA Response statistics">
+          <div class="stat-card-header">
+            <div class="stat-card-icon"><img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="18" height="18" /></div>
+            <span class="stat-card-label">SLA Response</span>
+            <span class="stat-card-value">99.99%</span>
           </div>
-          <h3 class="bento-card-title">Analysis</h3>
-          <p class="bento-card-desc">Multi-model reasoning pipeline. Route tasks to GPT-4, Claude 3, or your fine-tuned model automatically.</p>
-          <div class="bento-card-tag">REASONING ENGINE</div>
-          <div class="bento-card-metric" aria-label="99.9% accuracy">
-            <span class="metric-number">99.9<span class="metric-unit">%</span></span>
-            <span class="metric-label">Accuracy</span>
+          <p class="stat-card-desc">Global uptime monitoring</p>
+          <div class="bar-chart-wrap" aria-hidden="true">
+            <div class="sla-marker">
+              <span class="sla-badge">SLA 99%</span>
+              <div class="sla-line"></div>
+              <div class="sla-dot"></div>
+            </div>
+            <div class="bar-chart" id="bar-chart"></div>
           </div>
         </article>
 
-        <article class="bento-card" data-index="2" role="listitem" tabindex="0" aria-label="Training feature">
-          <div class="bento-card-icon">
-            <img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="28" height="28" />
+        <!-- Card 3: Token Usage — Arc Gauge -->
+        <article class="bento-card bento-stat-card" data-index="2" role="listitem" tabindex="0" aria-label="Token Usage statistics">
+          <div class="stat-card-header">
+            <div class="stat-card-icon"><img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="18" height="18" /></div>
+            <span class="stat-card-label">Token Usage</span>
+            <span class="stat-card-value">8.4M</span>
           </div>
-          <h3 class="bento-card-title">Training</h3>
-          <p class="bento-card-desc">Fine-tune and deploy custom models on your proprietary data with one-click pipelines.</p>
-          <div class="bento-card-tag">FINE-TUNING</div>
+          <p class="stat-card-desc">Monthly volume throughput</p>
+          <div class="arc-gauge-wrap" aria-hidden="true">
+            <svg class="arc-gauge" viewBox="0 0 200 120" width="100%">
+              <path class="arc-track" d="M 20 110 A 80 80 0 0 1 180 110" />
+              <path class="arc-fill" id="arc-fill" d="M 20 110 A 80 80 0 0 1 180 110" stroke-dasharray="251" stroke-dashoffset="50" />
+              <text class="arc-number" id="arc-num" x="100" y="95" text-anchor="middle">345</text>
+            </svg>
+            <div class="arc-stats">
+              <div><span class="arc-stat-val" id="arc-queries">152</span><span class="arc-stat-key">TOTAL QUERIES</span></div>
+              <div><span class="arc-stat-val" id="arc-nodes">115</span><span class="arc-stat-key">ACTIVE NODES</span></div>
+            </div>
+          </div>
         </article>
 
-        <article class="bento-card bento-card--accent" data-index="3" role="listitem" tabindex="0" aria-label="Deploy feature">
-          <div class="bento-card-icon">
-            <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="28" height="28" />
+        <!-- Card 4: Growth Vector — Full-width animated line chart -->
+        <article class="bento-card bento-stat-card bento-stat-card--wide" data-index="3" role="listitem" tabindex="0" aria-label="Growth Vector statistics">
+          <div class="growth-header">
+            <div>
+              <div class="stat-card-header">
+                <div class="stat-card-icon"><img src="reference/SVGs/arrow-path.svg" alt="" aria-hidden="true" width="18" height="18" /></div>
+                <span class="stat-card-label">Growth Vector</span>
+                <span class="stat-card-value">99.98%</span>
+              </div>
+              <p class="stat-card-desc">Efficiency gains over 30 days</p>
+            </div>
+            <div class="growth-metric" aria-label="82% net growth">
+              <span class="growth-number">82%</span>
+              <span class="growth-label">NET GROWTH</span>
+            </div>
           </div>
-          <h3 class="bento-card-title">Deploy</h3>
-          <p class="bento-card-desc">Push agents to production at scale. Auto-scaling infrastructure with zero cold-start latency.</p>
-          <div class="bento-card-tag">INFRASTRUCTURE</div>
-          <div class="bento-card-metric" aria-label="0ms cold start">
-            <span class="metric-number">0<span class="metric-unit">ms</span></span>
-            <span class="metric-label">Cold Start</span>
+          <div class="line-chart-wrap" aria-hidden="true">
+            <svg class="line-chart" id="line-chart" viewBox="0 0 800 120" preserveAspectRatio="none" width="100%">
+              <path class="line-fill" id="line-fill" d="" />
+              <path class="line-path" id="line-path" d="" />
+            </svg>
           </div>
         </article>
 
       </div>
 
-      <!-- MOBILE ACCORDION -->
-      <div class="features-accordion" id="features-accordion" aria-label="Product features">
+      <!-- MOBILE ACCORDION (same 4 items, contextually labeled) -->
+      <div class="features-accordion" id="features-accordion" aria-label="Product statistics">
 
         <details class="accordion-item" data-index="0">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
-              <img src="reference/SVGs/search.svg" alt="" aria-hidden="true" width="20" height="20" />
-              <h3 class="accordion-title">Discovery</h3>
+              <img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="20" height="20" />
+              <h3 class="accordion-title">System Load</h3>
             </div>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="accordion-chevron" />
           </summary>
           <div class="accordion-body">
-            <p>Find and ingest data from any source. Our neural crawlers index structured and unstructured data at enterprise scale.</p>
-            <div class="accordion-tag">INGESTION LAYER</div>
+            <p>Active neural processing across 15 core systems. 98.7% uptime with 99% cache efficiency.</p>
+            <div class="accordion-tag">SYSTEM TELEMETRY</div>
           </div>
         </details>
 
         <details class="accordion-item" data-index="1">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
-              <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="20" height="20" />
-              <h3 class="accordion-title">Analysis</h3>
+              <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="20" height="20" />
+              <h3 class="accordion-title">SLA Response</h3>
             </div>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="accordion-chevron" />
           </summary>
           <div class="accordion-body">
-            <p>Multi-model reasoning pipeline. Route tasks to GPT-4, Claude 3, or your fine-tuned model automatically.</p>
-            <div class="accordion-tag">REASONING ENGINE</div>
+            <p>Global uptime monitoring at 99.99%. SLA threshold maintained with real-time latency tracking.</p>
+            <div class="accordion-tag">UPTIME MONITORING</div>
           </div>
         </details>
 
         <details class="accordion-item" data-index="2">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
-              <img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="20" height="20" />
-              <h3 class="accordion-title">Training</h3>
+              <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="20" height="20" />
+              <h3 class="accordion-title">Token Usage</h3>
             </div>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="accordion-chevron" />
           </summary>
           <div class="accordion-body">
-            <p>Fine-tune and deploy custom models on your proprietary data with one-click pipelines.</p>
-            <div class="accordion-tag">FINE-TUNING</div>
+            <p>8.4M monthly volume throughput. 152 total queries across 115 active nodes this cycle.</p>
+            <div class="accordion-tag">TOKEN TELEMETRY</div>
           </div>
         </details>
 
         <details class="accordion-item" data-index="3">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
-              <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="20" height="20" />
-              <h3 class="accordion-title">Deploy</h3>
+              <img src="reference/SVGs/arrow-path.svg" alt="" aria-hidden="true" width="20" height="20" />
+              <h3 class="accordion-title">Growth Vector</h3>
             </div>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="accordion-chevron" />
           </summary>
           <div class="accordion-body">
-            <p>Push agents to production at scale. Auto-scaling infrastructure with zero cold-start latency.</p>
-            <div class="accordion-tag">INFRASTRUCTURE</div>
+            <p>82% net growth in efficiency gains over the last 30 days. 99.98% vector accuracy.</p>
+            <div class="accordion-tag">GROWTH METRICS</div>
           </div>
         </details>
 
       </div>
     </section>
+
 
     <!-- ============================================================
          SECTION 4: INTERACTIVE PRODUCT DEMO

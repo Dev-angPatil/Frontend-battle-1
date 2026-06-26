@@ -678,26 +678,326 @@ input, select, textarea {
   opacity: 1;
 }
 
-/* Bento Grid Layout — 12-col grid, no overlap */
-.bento-card--wide {
-  grid-column: 1 / 7;   /* cols 1-6 */
+
+/* Stats Dashboard Bento Layout — 3 equal cols top, full-width bottom */
+.bento-stat-card {
+  grid-column: span 4; /* each top card spans 4 of 12 cols */
 }
 
-.bento-card--tall {
-  grid-row: 1 / 3;
-  grid-column: 7 / 10;  /* cols 7-9 */
+.bento-stat-card--wide {
+  grid-column: 1 / -1; /* full width */
 }
 
-/* Training card: row 2, cols 1-6 */
-.bento-card:nth-child(3) {
-  grid-column: 1 / 7;
+/* Old class overrides — clear them for stat cards */
+.bento-card--wide  { grid-column: unset; }
+.bento-card--tall  { grid-column: unset; grid-row: unset; }
+.bento-card--accent { grid-column: unset; grid-row: unset; }
+.bento-card:nth-child(3) { grid-column: unset; }
+
+/* ── STAT CARD INTERNALS ─────────────────────────────────────────── */
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
 }
 
-.bento-card--accent {
-  grid-column: 10 / 13; /* cols 10-12 */
-  grid-row: 1 / 3;       /* spans 2 rows */
-  background: var(--nocturnal-exp);
+.stat-card-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
 }
+.stat-card-icon img { filter: invert(1); }
+
+.stat-card-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-white);
+  flex: 1;
+}
+
+.stat-card-value {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--forsythia);
+}
+
+.stat-card-desc {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-bottom: var(--space-md);
+  letter-spacing: 0.02em;
+}
+
+/* ── CIRCULAR GAUGE ──────────────────────────────────────────────── */
+.gauge-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.circular-gauge {
+  display: block;
+  overflow: visible;
+}
+
+.gauge-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke: var(--color-white);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: 60px 60px;
+  transition: stroke-dashoffset 0.8s var(--ease-in-out);
+}
+
+.gauge-number {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  fill: var(--color-white);
+}
+
+.gauge-sublabel {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  fill: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.gauge-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gauge-meta > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.meta-val {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1;
+}
+
+.meta-key {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── BAR CHART ───────────────────────────────────────────────────── */
+.bar-chart-wrap {
+  position: relative;
+  padding-top: 32px;
+}
+
+.sla-marker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+}
+
+.sla-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--oceanic-noir);
+  background: var(--color-white);
+  padding: 2px 8px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sla-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  border-top: 1px dashed rgba(255,255,255,0.2);
+}
+
+.sla-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff4466;
+  box-shadow: 0 0 8px rgba(255, 68, 102, 0.6);
+  flex-shrink: 0;
+}
+
+.bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 120px;
+}
+
+.bar-chart .bar {
+  flex: 1;
+  border-radius: 3px 3px 0 0;
+  background: rgba(255,255,255,0.15);
+  position: relative;
+  transition: height 0.6s var(--ease-in-out), background 0.3s;
+  min-width: 0;
+}
+
+.bar-chart .bar--above {
+  background: var(--color-white);
+}
+
+.bar-chart .bar .bar-dot {
+  position: absolute;
+  top: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-white);
+}
+
+/* ── ARC (SEMICIRCLE) GAUGE ──────────────────────────────────────── */
+.arc-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.arc-gauge { display: block; }
+
+.arc-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.08);
+  stroke-width: 14;
+  stroke-linecap: round;
+}
+
+.arc-fill {
+  fill: none;
+  stroke: var(--color-white);
+  stroke-width: 14;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.8s var(--ease-in-out);
+}
+
+.arc-number {
+  font-family: var(--font-mono);
+  font-size: 2.2rem;
+  font-weight: 700;
+  fill: var(--color-white);
+}
+
+.arc-stats {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
+}
+
+.arc-stats > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.arc-stat-val {
+  font-family: var(--font-mono);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1;
+}
+
+.arc-stat-key {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── LINE CHART (GROWTH VECTOR) ──────────────────────────────────── */
+.growth-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-md);
+}
+
+.growth-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.growth-number {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--color-white);
+  line-height: 1;
+}
+
+.growth-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.line-chart-wrap {
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: var(--space-sm);
+}
+
+.line-chart { display: block; }
+
+.line-path {
+  fill: none;
+  stroke: var(--color-white);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.line-fill {
+  stroke: none;
+  fill: url(#lineGrad);
+  opacity: 0.15;
+}
+
+
 
 .bento-card-icon {
   width: 48px;

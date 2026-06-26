@@ -415,6 +415,165 @@ function initCtaForm() {
   });
 }
 
+
+// ─── 10. STATS DASHBOARD ──────────────────────────────────────────────────────
+
+/**
+ * Generates an SVG gradient defs block and injects into <body> once.
+ * Used by the line chart fill.
+ */
+function injectSvgDefs() {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('width', '0');
+  svg.setAttribute('height', '0');
+  svg.style.position = 'absolute';
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>`;
+  document.body.prepend(svg);
+}
+
+/**
+ * Builds the bar chart with random-ish heights.
+ */
+function buildBarChart() {
+  const container = document.getElementById('bar-chart');
+  if (!container) return;
+  const heights = [55, 80, 45, 95, 60, 110, 70, 85, 40, 100, 65, 75];
+  const slaLine = 70; // % of max — bars above this are "above SLA"
+  const maxH = Math.max(...heights);
+  container.innerHTML = '';
+  heights.forEach(h => {
+    const pct = (h / maxH) * 100;
+    const bar = document.createElement('div');
+    bar.className = 'bar' + (pct >= slaLine ? ' bar--above' : '');
+    bar.style.height = `${pct}%`;
+    const dot = document.createElement('div');
+    dot.className = 'bar-dot';
+    bar.appendChild(dot);
+    container.appendChild(bar);
+  });
+}
+
+/**
+ * Animates the circular gauge fill and number.
+ * @param {number} pct - 0 to 100
+ */
+function setCircularGauge(pct) {
+  const fill = document.getElementById('sys-gauge-fill');
+  const num  = document.getElementById('sys-gauge-num');
+  if (!fill || !num) return;
+  const circumference = 2 * Math.PI * 50; // r=50
+  const offset = circumference - (pct / 100) * circumference;
+  fill.style.strokeDashoffset = offset;
+  num.textContent = Math.round(pct / 6.5); // core count correlates with %
+}
+
+/**
+ * Animates the arc gauge fill and centre number.
+ * @param {number} pct - 0 to 100
+ */
+function setArcGauge(pct) {
+  const fill = document.getElementById('arc-fill');
+  const num  = document.getElementById('arc-num');
+  if (!fill || !num) return;
+  const total = 251; // measured arc length for the SVG path
+  const offset = total - (pct / 100) * total;
+  fill.style.strokeDashoffset = offset;
+  num.textContent = Math.round(280 + pct * 1.5);
+}
+
+/**
+ * Draws a smooth SVG line chart path given y-values.
+ * @param {number[]} data - normalised 0–100
+ */
+function drawLineChart(data) {
+  const path = document.getElementById('line-path');
+  const fill = document.getElementById('line-fill');
+  if (!path || !fill) return;
+
+  const W = 800, H = 120;
+  const pts = data.map((v, i) => [
+    (i / (data.length - 1)) * W,
+    H - (v / 100) * (H - 16) - 8,
+  ]);
+
+  // Smooth catmull-rom-like cubic bezier
+  let d = `M ${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const cx1 = pts[i][0] + (pts[i + 1][0] - pts[i][0]) / 3;
+    const cy1 = pts[i][1];
+    const cx2 = pts[i][0] + 2 * (pts[i + 1][0] - pts[i][0]) / 3;
+    const cy2 = pts[i + 1][1];
+    d += ` C ${cx1},${cy1} ${cx2},${cy2} ${pts[i + 1][0]},${pts[i + 1][1]}`;
+  }
+
+  path.setAttribute('d', d);
+  fill.setAttribute('d', d + ` L ${W},${H} L 0,${H} Z`);
+}
+
+/**
+ * Generates random fluctuating values around a base.
+ */
+function fluctuate(base, range) {
+  return Math.max(0, Math.min(100, base + (Math.random() - 0.5) * range));
+}
+
+/**
+ * Main dashboard initialiser — builds charts then starts live update loop.
+ */
+function initStatsDashboard() {
+  injectSvgDefs();
+  buildBarChart();
+
+  // Initial render
+  setCircularGauge(85);
+  setArcGauge(78);
+
+  // Growth line: simulate 30-day upward trend with noise
+  const baseData = Array.from({ length: 20 }, (_, i) =>
+    20 + i * 3 + (Math.random() - 0.5) * 15
+  );
+  drawLineChart(baseData);
+
+  // Live update every 2 seconds (non-blocking, requestAnimationFrame-based)
+  let tick = 0;
+  setInterval(() => {
+    tick++;
+
+    // Circular gauge — fluctuates around 85%
+    const sysLoad = fluctuate(85, 20);
+    setCircularGauge(sysLoad);
+    const cachePct = Math.round(fluctuate(97, 4));
+    const sysCache = document.getElementById('sys-cache');
+    if (sysCache) sysCache.textContent = `${cachePct}%`;
+    const sysLoadEl = document.getElementById('sys-load-pct');
+    if (sysLoadEl) sysLoadEl.textContent = `${sysLoad.toFixed(1)}%`;
+
+    // Arc gauge — fluctuates around 75%
+    const tokenLoad = fluctuate(75, 25);
+    setArcGauge(tokenLoad);
+    const queries = Math.round(140 + Math.random() * 30);
+    const nodes   = Math.round(100 + Math.random() * 30);
+    const qEl = document.getElementById('arc-queries');
+    const nEl = document.getElementById('arc-nodes');
+    if (qEl) qEl.textContent = queries;
+    if (nEl) nEl.textContent = nodes;
+
+    // Rebuild bar chart every 6 ticks (12 seconds)
+    if (tick % 6 === 0) buildBarChart();
+
+    // Scroll line data left and append new value
+    baseData.shift();
+    baseData.push(fluctuate(baseData[baseData.length - 1] || 50, 12));
+    drawLineChart(baseData);
+  }, 2000);
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initPricing();
@@ -426,4 +585,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollToTop();
   initSmoothAnchors();
   initCtaForm();
+  initStatsDashboard();
 });
