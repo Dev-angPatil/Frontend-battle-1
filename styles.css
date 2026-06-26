@@ -309,8 +309,13 @@ input, select, textarea {
   color: var(--color-white);
   transition: opacity var(--dur-micro) var(--ease-out);
 }
-.nav-logo:hover { opacity: 0.85; }
-.logo-mark { filter: invert(1); flex-shrink: 0; }
+.nav-logo:hover { opacity: 0.95; }
+.nav-logo:hover .logo-mark { transform: rotate(15deg) scale(1.05); }
+.logo-mark {
+  filter: invert(1);
+  flex-shrink: 0;
+  transition: transform 0.3s var(--ease-out);
+}
 
 .nav-links {
   display: flex;
@@ -450,6 +455,15 @@ input, select, textarea {
 .hero-title em {
   font-style: normal;
   color: var(--forsythia);
+  background: linear-gradient(135deg, var(--forsythia) 0%, var(--deep-saffron) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  transition: transform var(--dur-hover) var(--ease-out), filter var(--dur-hover) var(--ease-out);
+}
+.hero-title em:hover {
+  transform: scale(1.02);
+  filter: drop-shadow(0 0 8px rgba(255, 200, 1, 0.4));
 }
 
 .hero-subtitle {
@@ -539,7 +553,7 @@ input, select, textarea {
 .terminal-title {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.72);
   margin-left: 8px;
 }
 
@@ -551,7 +565,7 @@ input, select, textarea {
   overflow-x: auto;
 }
 
-.c-comment { color: #6e7681; }
+.c-comment { color: #8b949e; }
 .c-keyword  { color: #ff7b72; }
 .c-fn       { color: #d2a8ff; }
 .c-string   { color: var(--forsythia); }
@@ -2580,7 +2594,7 @@ details[open] .accordion-summary {
 }
 .blog-view-all p {
   font-size: var(--text-sm);
-  color: var(--text-dark-muted);
+  color: var(--oceanic-noir);
 }
 
 /* ── 14. FAQ SECTION ─────────────────────────────────────────────── */
@@ -2758,6 +2772,9 @@ details[open] .faq-chevron {
   pointer-events: none;
   user-select: none;
   line-height: 1;
+}
+.footer-watermark::before {
+  content: 'armory';
 }
 
 .footer-top {

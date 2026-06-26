@@ -804,6 +804,32 @@ function initInteractiveChat() {
   });
 }
 
+function initMarqueeControls() {
+  const prevBtn = document.getElementById('marquee-prev');
+  const nextBtn = document.getElementById('marquee-next');
+  const inner = document.querySelector('.marquee-inner');
+  if (!prevBtn || !nextBtn || !inner) return;
+
+  prevBtn.addEventListener('click', () => {
+    inner.style.animationDirection = 'reverse';
+  });
+
+  nextBtn.addEventListener('click', () => {
+    inner.style.animationDirection = 'normal';
+  });
+
+  // Pause on hover
+  const track = document.querySelector('.marquee-track');
+  if (track) {
+    track.addEventListener('mouseenter', () => {
+      inner.style.animationPlayState = 'paused';
+    });
+    track.addEventListener('mouseleave', () => {
+      inner.style.animationPlayState = 'running';
+    });
+  }
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initPricing();
@@ -818,4 +844,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initStatsDashboard();
   initAgentFlowSimulation();
   initInteractiveChat();
+  initMarqueeControls();
 });
