@@ -706,7 +706,6 @@ input, select, textarea {
 .bento-card--wide  { grid-column: unset; }
 .bento-card--tall  { grid-column: unset; grid-row: unset; }
 .bento-card--accent { grid-column: unset; grid-row: unset; }
-.bento-card:nth-child(3) { grid-column: unset; }
 
 /* ── STAT CARD INTERNALS ─────────────────────────────────────────── */
 .stat-card-header {
@@ -3013,10 +3012,15 @@ details[open] .faq-chevron {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  .bento-card--wide { grid-column: 1 / 3; }
-  .bento-card--tall { grid-row: auto; grid-column: auto; }
-  .bento-card--accent { grid-column: auto; grid-row: auto; }
-  .bento-card:nth-child(3) { grid-column: auto; }
+  .bento-stat-card {
+    grid-column: span 1;
+  }
+  .bento-stat-card--wide {
+    grid-column: 1 / -1;
+  }
+  .bento-card:nth-child(3) {
+    grid-column: 1 / -1; /* Make Card 3 (Token Usage) span full width on tablet */
+  }
 
   .pricing-cards {
     grid-template-columns: 1fr;
