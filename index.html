@@ -328,7 +328,7 @@
       <!-- MOBILE ACCORDION (same 4 items, contextually labeled) -->
       <div class="features-accordion" id="features-accordion" aria-label="Product statistics">
 
-        <details class="accordion-item" data-index="0">
+        <details class="accordion-item" data-index="0" name="features-accordion">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
               <img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="20" height="20" />
@@ -342,7 +342,7 @@
           </div>
         </details>
 
-        <details class="accordion-item" data-index="1">
+        <details class="accordion-item" data-index="1" name="features-accordion">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
               <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="20" height="20" />
@@ -356,7 +356,7 @@
           </div>
         </details>
 
-        <details class="accordion-item" data-index="2">
+        <details class="accordion-item" data-index="2" name="features-accordion">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
               <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="20" height="20" />
@@ -370,7 +370,7 @@
           </div>
         </details>
 
-        <details class="accordion-item" data-index="3">
+        <details class="accordion-item" data-index="3" name="features-accordion">
           <summary class="accordion-summary">
             <div class="accordion-summary-inner">
               <img src="reference/SVGs/arrow-path.svg" alt="" aria-hidden="true" width="20" height="20" />
@@ -427,11 +427,11 @@
                   </linearGradient>
                   <linearGradient id="grad-process-crm" x1="100%" y1="0%" x2="0%" y2="100%">
                     <stop offset="0%" stop-color="var(--mystic-mint)" stop-opacity="0.8" />
-                    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="var(--deep-saffron)" stop-opacity="0.8" />
                   </linearGradient>
                   <linearGradient id="grad-process-analytics" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stop-color="var(--mystic-mint)" stop-opacity="0.8" />
-                    <stop offset="100%" stop-color="#10b981" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="var(--mystic-mint)" stop-opacity="0.8" />
                   </linearGradient>
                 </defs>
                 <!-- Path 1: Trigger to Process -->
@@ -445,10 +445,10 @@
                 <circle r="4" fill="var(--forsythia)" filter="drop-shadow(0 0 3px var(--forsythia))">
                   <animateMotion dur="2.5s" repeatCount="indefinite" path="M 200 65 L 200 135" />
                 </circle>
-                <circle r="3" fill="#3b82f6" filter="drop-shadow(0 0 3px #3b82f6)">
+                <circle r="3" fill="var(--deep-saffron)" filter="drop-shadow(0 0 3px var(--deep-saffron))">
                   <animateMotion dur="2s" begin="1.2s" repeatCount="indefinite" path="M 200 185 C 200 225, 100 225, 100 235" />
                 </circle>
-                <circle r="3" fill="#10b981" filter="drop-shadow(0 0 3px #10b981)">
+                <circle r="3" fill="var(--mystic-mint)" filter="drop-shadow(0 0 3px var(--mystic-mint))">
                   <animateMotion dur="2s" begin="1.2s" repeatCount="indefinite" path="M 200 185 C 200 225, 300 225, 300 235" />
                 </circle>
               </svg>
