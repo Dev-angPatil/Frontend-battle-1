@@ -2681,11 +2681,13 @@ details[open] .accordion-body {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform var(--dur-hover) var(--ease-out);
+  transition: transform var(--dur-hover) var(--ease-out),
+              filter var(--dur-hover) var(--ease-out);
 }
 
 .blog-card:hover .blog-image {
   transform: scale(1.05);
+  filter: brightness(1.08);
 }
 
 .blog-image-placeholder {
@@ -3296,6 +3298,48 @@ details[open] .faq-chevron {
   .hero-terminal { max-width: 100%; }
 
   .product-demo .demo-tabs { flex-wrap: wrap; }
+
+  /* Mobile layout stack for Product Demo */
+  .demo-panel {
+    padding: 0;
+    overflow: hidden;
+    min-height: auto;
+  }
+  .flow-layout,
+  .chat-layout {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .flow-canvas-wrapper {
+    height: 320px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 10px;
+  }
+  .flow-nodes-container {
+    transform: scale(0.85);
+    transform-origin: center center;
+  }
+  .agent-telemetry-inspector {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    height: auto;
+    max-height: none;
+  }
+  .chat-orb-container {
+    height: 320px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: var(--space-md);
+  }
+  .chat-console {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    height: 420px;
+  }
+  .chat-messages {
+    max-height: 220px;
+  }
 
   .section-header--light { text-align: left; }
 
