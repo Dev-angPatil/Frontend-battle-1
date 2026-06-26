@@ -1406,18 +1406,25 @@ details[open] .accordion-summary {
 }
 
 .case-study-row:hover::after {
-  opacity: 0.18;
+  opacity: 0.08; /* Subtle background row image presence */
   transform: scale(1);
+  animation: rowBgPan 25s linear infinite;
 }
 
 .case-study-row--cigna::after {
-  background-image: linear-gradient(135deg, var(--nocturnal-exp), #0a3040);
+  background-image: url('assets/cigna-bg.png');
 }
 .case-study-row--aetna::after {
-  background-image: linear-gradient(135deg, #1a0535, var(--oceanic-noir));
+  background-image: url('assets/aetna-bg.png');
 }
 .case-study-row--anthem::after {
-  background-image: linear-gradient(135deg, var(--oceanic-noir), #0d1f2d);
+  background-image: url('assets/anthem-bg.png');
+}
+
+@keyframes rowBgPan {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .case-study-row > * { position: relative; z-index: 1; }
@@ -1448,10 +1455,47 @@ details[open] .accordion-summary {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
   transition: transform var(--dur-hover) var(--ease-out);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 .case-study-row:hover .case-study-logo-placeholder {
   transform: scale(1.03);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+.case-study-logo-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  z-index: 0;
+  transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+  pointer-events: none;
+}
+.case-study-row--cigna .case-study-logo-placeholder::before {
+  background-image: url('assets/cigna-bg.png');
+}
+.case-study-row--aetna .case-study-logo-placeholder::before {
+  background-image: url('assets/aetna-bg.png');
+}
+.case-study-row--anthem .case-study-logo-placeholder::before {
+  background-image: url('assets/anthem-bg.png');
+}
+.case-study-row:hover .case-study-logo-placeholder::before {
+  opacity: 1;
+}
+.case-study-row--cigna:hover .case-study-logo-placeholder::before {
+  animation: cignaPan 8s ease-in-out infinite alternate;
+}
+.case-study-row--aetna:hover .case-study-logo-placeholder::before {
+  animation: aetnaRotate 15s linear infinite;
+}
+.case-study-row--anthem:hover .case-study-logo-placeholder::before {
+  animation: anthemWave 6s ease-in-out infinite alternate;
 }
 .case-study-logo-placeholder span {
   font-family: var(--font-mono);
@@ -1459,6 +1503,27 @@ details[open] .accordion-summary {
   font-weight: 700;
   color: var(--forsythia);
   letter-spacing: -0.02em;
+  position: relative;
+  z-index: 2;
+  transition: color var(--dur-hover) var(--ease-out), text-shadow var(--dur-hover) var(--ease-out);
+}
+.case-study-row:hover .case-study-logo-placeholder span {
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes cignaPan {
+  0% { transform: scale(1.15) translate(0, 0); }
+  100% { transform: scale(1.25) translate(-3%, -3%); }
+}
+@keyframes aetnaRotate {
+  0% { transform: scale(1.2) rotate(0deg); }
+  100% { transform: scale(1.2) rotate(360deg); }
+}
+@keyframes anthemWave {
+  0% { transform: scale(1.15) translate(0, 0); }
+  50% { transform: scale(1.22) translate(1%, 2%); }
+  100% { transform: scale(1.15) translate(-1%, -1%); }
 }
 
 .case-study-year {
