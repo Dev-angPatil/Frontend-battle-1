@@ -209,6 +209,23 @@ function initBentoAccordion() {
     }
   }
 
+  // Exclusive accordion behavior for details elements
+  accordion.querySelectorAll('.accordion-item').forEach(item => {
+    item.addEventListener('toggle', () => {
+      if (item.open) {
+        accordion.querySelectorAll('.accordion-item').forEach(other => {
+          if (other !== item && other.open) {
+            other.open = false;
+          }
+        });
+        const idx = parseInt(item.getAttribute('data-index'), 10);
+        if (idx >= 0) {
+          bentoGrid.setAttribute('data-active-index', idx);
+        }
+      }
+    });
+  });
+
   let wasMobile = window.innerWidth <= BREAKPOINT;
 
   // ResizeObserver — fires when bento wrapper changes size

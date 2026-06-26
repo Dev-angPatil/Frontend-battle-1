@@ -50,6 +50,7 @@ input, select, textarea {
 
 /* ── 2. DESIGN TOKENS ──────────────────────────────────────────── */
 :root {
+  interpolate-size: allow-keywords;
   /* Color Palette — exact hex codes from colorPallet.pdf */
   --arctic-powder:  #F1F6F4;
   --mystic-mint:    #D9E8E2;
@@ -1140,8 +1141,27 @@ details[open] .accordion-summary {
 }
 
 .accordion-body {
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  padding: 0 var(--space-lg);
+  transition: height var(--dur-structural) var(--ease-in-out),
+              padding var(--dur-structural) var(--ease-in-out),
+              opacity var(--dur-structural) var(--ease-in-out);
+}
+
+details[open] .accordion-body {
+  height: auto;
+  opacity: 1;
   padding: var(--space-md) var(--space-lg);
-  animation: accordionOpen var(--dur-structural) var(--ease-in-out);
+}
+
+@starting-style {
+  details[open] .accordion-body {
+    height: 0;
+    opacity: 0;
+    padding: 0 var(--space-lg);
+  }
 }
 
 .accordion-body p {
