@@ -574,6 +574,236 @@ function initStatsDashboard() {
   }, 2000);
 }
 
+// ─── 11. AI AGENT FLOW & CHAT SIMULATIONS ────────────────────────────────────
+
+function initAgentFlowSimulation() {
+  const triggerCard = document.getElementById('node-trigger');
+  const processCard = document.getElementById('node-process');
+  const crmCard = document.getElementById('node-crm');
+  const analyticsCard = document.getElementById('node-analytics');
+  const consoleEl = document.getElementById('agent-console');
+  const progressPath = document.getElementById('node-progress-bar');
+  const progressPct = document.getElementById('node-progress-pct');
+  const svgConnections = document.querySelectorAll('.flow-line-pulse');
+  const orbNode = document.getElementById('orb-node');
+
+  if (!triggerCard || !processCard || !consoleEl) return;
+
+  let currentStep = 0;
+
+  function updateOrbNode(state) {
+    if (orbNode) {
+      orbNode.textContent = state;
+    }
+  }
+
+  function addLog(text, type = 'muted') {
+    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const line = document.createElement('div');
+    line.className = `console-line text-${type}`;
+    line.textContent = `[${time}] ${text}`;
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+
+    // Limit log lines to 12
+    if (consoleEl.children.length > 12) {
+      consoleEl.removeChild(consoleEl.firstChild);
+    }
+  }
+
+  function resetAll() {
+    [triggerCard, processCard, crmCard, analyticsCard].forEach(c => c.classList.remove('active-run'));
+    svgConnections.forEach(path => path.classList.remove('active'));
+    if (progressPath) progressPath.setAttribute('stroke-dasharray', '0, 100');
+    if (progressPct) progressPct.textContent = '0%';
+  }
+
+  function runSequence() {
+    resetAll();
+
+    switch (currentStep) {
+      case 0: // Trigger
+        triggerCard.classList.add('active-run');
+        svgConnections[0].classList.add('active'); // Line 1
+        updateOrbNode('TRIGGER');
+        addLog('[TRIGGER] IMAP webhook listener triggered.', 'warning');
+        addLog('[TRIGGER] Input payload: invoice_forecast_Q2.pdf detected.', 'muted');
+        currentStep = 1;
+        setTimeout(runSequence, 2500);
+        break;
+
+      case 1: // Processing
+        triggerCard.classList.remove('active-run');
+        processCard.classList.add('active-run');
+        updateOrbNode('PROCESSING');
+
+        // Progress bar simulation
+        let pct = 0;
+        addLog('[PROCESS] Initializing layout parsing & OCR extraction...', 'info');
+        const interval = setInterval(() => {
+          pct += 10;
+          if (progressPath) progressPath.setAttribute('stroke-dasharray', `${pct}, 100`);
+          if (progressPct) progressPct.textContent = `${pct}%`;
+          if (pct >= 100) {
+            clearInterval(interval);
+            addLog('[PROCESS] Extraction successful. Confidence Score: 99.85%', 'success');
+            currentStep = 2;
+            setTimeout(runSequence, 1000);
+          }
+        }, 150);
+        break;
+
+      case 2: // Action Outputs
+        processCard.classList.remove('active-run');
+        svgConnections[0].classList.remove('active');
+        svgConnections[1].classList.add('active'); // CRM line
+        svgConnections[2].classList.add('active'); // Analytics line
+        crmCard.classList.add('active-run');
+        analyticsCard.classList.add('active-run');
+        updateOrbNode('ACTION');
+
+        addLog('[ACTION] Synchronizing CRM (Salesforce API)...', 'info');
+        addLog('[ACTION] Syncing Telemetry (AWS CloudWatch)...', 'info');
+
+        setTimeout(() => {
+          addLog('[ACTION] Salesforce CRM updated successfully.', 'success');
+          addLog('[ACTION] Telemetry metrics pushed: +34% accuracy.', 'success');
+          currentStep = 3;
+          setTimeout(runSequence, 3000);
+        }, 1500);
+        break;
+
+      case 3: // Cooldown/Reset
+        resetAll();
+        updateOrbNode('IDLE');
+        addLog('[SYSTEM] Pipeline idle. Awaiting next payload...', 'muted');
+        currentStep = 0;
+        setTimeout(runSequence, 4000);
+        break;
+    }
+  }
+
+  // Start sequence with initial delay
+  setTimeout(runSequence, 1000);
+}
+
+function initInteractiveChat() {
+  const messagesContainer = document.getElementById('chat-messages-container');
+  const inputField = document.getElementById('chat-input-field');
+  const sendBtn = document.getElementById('chat-send-btn');
+  const orb = document.getElementById('daemon-orb');
+  const tempEl = document.getElementById('orb-temp');
+  const threadsEl = document.getElementById('orb-threads');
+
+  if (!messagesContainer || !inputField || !sendBtn) return;
+
+  function appendMessage(sender, text, isAi = false) {
+    const msg = document.createElement('div');
+    msg.className = `chat-msg ${isAi ? 'chat-msg--ai' : 'chat-msg--user'}`;
+    
+    const avatar = document.createElement('div');
+    avatar.className = 'chat-avatar';
+    
+    const content = document.createElement('div');
+    content.className = 'chat-msg-content';
+    
+    const strong = document.createElement('strong');
+    strong.textContent = sender;
+    
+    const p = document.createElement('p');
+    p.textContent = text;
+    
+    content.appendChild(strong);
+    content.appendChild(p);
+    
+    msg.appendChild(avatar);
+    msg.appendChild(content);
+    
+    messagesContainer.appendChild(msg);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  }
+
+  // Telemetry HUD oscillation
+  setInterval(() => {
+    if (tempEl) {
+      const baseTemp = 41.2;
+      const dev = (Math.random() * 1.6 - 0.8).toFixed(1);
+      tempEl.textContent = `${(baseTemp + parseFloat(dev)).toFixed(1)}°C`;
+    }
+    if (threadsEl) {
+      const threads = Math.floor(Math.random() * 7) + 506; // 506 to 512
+      threadsEl.textContent = `${threads}/512`;
+    }
+  }, 3000);
+
+  function handleSend() {
+    const text = inputField.value.trim();
+    if (!text) return;
+
+    // Add User message
+    appendMessage('You', text, false);
+    inputField.value = '';
+
+    // Show AI typing state
+    const typingMsg = document.createElement('div');
+    typingMsg.className = 'chat-msg chat-msg--typing';
+    typingMsg.id = 'chat-typing-indicator';
+    typingMsg.innerHTML = `
+      <div class="typing-dots">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    `;
+    messagesContainer.appendChild(typingMsg);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Activate Orb glow/speed animation
+    if (orb) orb.classList.add('orb-active');
+
+    // Simulate AI thinking and reply
+    setTimeout(() => {
+      // Remove typing indicator
+      const indicator = document.getElementById('chat-typing-indicator');
+      if (indicator) indicator.remove();
+
+      // Deactivate Orb glow
+      if (orb) orb.classList.remove('orb-active');
+
+      // Select reply based on keywords
+      const query = text.toLowerCase();
+      let reply = '';
+
+      if (query.includes('model') || query.includes('llm') || query.includes('gpt') || query.includes('claude')) {
+        reply = 'Daemon AI supports GPT-4o, Claude 3.5 Sonnet, and custom fine-tuned Llama-3 weights. Our router dynamically dispatches tasks based on context length and complexity budget.';
+      } else if (query.includes('optimize') || query.includes('next') || query.includes('forecast') || query.includes('latency') || query.includes('audit')) {
+        reply = 'We recommend integrating the CRM Salesforce webhook next. Statistics suggest this will yield an 18% reduction in manual data processing and ticket resolution times.';
+      } else if (query.includes('price') || query.includes('pricing') || query.includes('cost') || query.includes('free') || query.includes('limit')) {
+        reply = 'You can build for free on our Starter tier. The Pro tier is $49/mo (includes 25 active agents), and Enterprise pricing is customized with SOC 2 & dedicated nodes.';
+      } else if (query.includes('hello') || query.includes('hi') || query.includes('hey') || query.includes('help')) {
+        reply = 'Hello! I am Daemon AI. I monitor system metrics and optimize agent pipelines. Ask me about model routing, webhook updates, or pricing.';
+      } else {
+        reply = 'All edge nodes are currently operating with 12ms average latency. The IMAP trigger flow is active. Let me know if you want me to perform a configuration audit.';
+      }
+
+      appendMessage('Daemon AI', reply, true);
+    }, 1200);
+  }
+
+  sendBtn.addEventListener('click', handleSend);
+  inputField.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') handleSend();
+  });
+
+  // Suggestion chips listeners
+  document.querySelectorAll('.chat-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      inputField.value = chip.getAttribute('data-query');
+      handleSend();
+    });
+  });
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initPricing();
@@ -586,4 +816,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSmoothAnchors();
   initCtaForm();
   initStatsDashboard();
+  initAgentFlowSimulation();
+  initInteractiveChat();
 });

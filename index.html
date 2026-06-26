@@ -414,29 +414,110 @@
 
         <!-- Agent Flow Panel -->
         <div class="demo-panel" id="panel-agent" role="tabpanel" aria-labelledby="tab-agent">
-          <div class="flow-canvas" aria-label="AI Agent workflow diagram">
-            <div class="flow-node flow-node--trigger">
-              <img src="reference/SVGs/arrow-path.svg" alt="" aria-hidden="true" width="16" height="16" />
-              <span>Email Trigger (IMAP)</span>
-            </div>
-            <div class="flow-connector" aria-hidden="true">
-              <img src="reference/SVGs/link.svg" alt="" width="14" height="14" />
-            </div>
-            <div class="flow-node flow-node--process">
-              <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="16" height="16" />
-              <span>Data Extraction</span>
-            </div>
-            <div class="flow-connector" aria-hidden="true">
-              <img src="reference/SVGs/link.svg" alt="" width="14" height="14" />
-            </div>
-            <div class="flow-row">
-              <div class="flow-node flow-node--output">
-                <img src="reference/SVGs/link-solid.svg" alt="" aria-hidden="true" width="16" height="16" />
-                <span>CRM Update</span>
+          <div class="flow-layout">
+            <div class="flow-canvas-wrapper">
+              <div class="flow-grid-bg"></div>
+              
+              <!-- Connecting animated SVG lines with curved pathways & floating particles -->
+              <svg class="flow-svg-connections" viewBox="0 0 400 320" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="grad-trigger-process" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="var(--forsythia)" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="var(--mystic-mint)" stop-opacity="0.8" />
+                  </linearGradient>
+                  <linearGradient id="grad-process-crm" x1="100%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="var(--mystic-mint)" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.8" />
+                  </linearGradient>
+                  <linearGradient id="grad-process-analytics" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--mystic-mint)" stop-opacity="0.8" />
+                    <stop offset="100%" stop-color="#10b981" stop-opacity="0.8" />
+                  </linearGradient>
+                </defs>
+                <!-- Path 1: Trigger to Process -->
+                <path d="M 200 65 L 200 135" class="flow-line-pulse" stroke="url(#grad-trigger-process)" stroke-width="2" />
+                <!-- Path 2: Process to CRM -->
+                <path d="M 200 185 C 200 225, 100 225, 100 235" class="flow-line-pulse" stroke="url(#grad-process-crm)" stroke-width="2" />
+                <!-- Path 3: Process to Analytics -->
+                <path d="M 200 185 C 200 225, 300 225, 300 235" class="flow-line-pulse" stroke="url(#grad-process-analytics)" stroke-width="2" />
+
+                <!-- Floating data packets/particles -->
+                <circle r="4" fill="var(--forsythia)" filter="drop-shadow(0 0 3px var(--forsythia))">
+                  <animateMotion dur="2.5s" repeatCount="indefinite" path="M 200 65 L 200 135" />
+                </circle>
+                <circle r="3" fill="#3b82f6" filter="drop-shadow(0 0 3px #3b82f6)">
+                  <animateMotion dur="2s" begin="1.2s" repeatCount="indefinite" path="M 200 185 C 200 225, 100 225, 100 235" />
+                </circle>
+                <circle r="3" fill="#10b981" filter="drop-shadow(0 0 3px #10b981)">
+                  <animateMotion dur="2s" begin="1.2s" repeatCount="indefinite" path="M 200 185 C 200 225, 300 225, 300 235" />
+                </circle>
+              </svg>
+
+              <div class="flow-nodes-container">
+                <!-- Trigger Node -->
+                <div class="flow-node-card flow-node-card--trigger" id="node-trigger">
+                  <div class="node-icon">
+                    <img src="reference/SVGs/arrow-path.svg" alt="" aria-hidden="true" width="16" height="16" />
+                  </div>
+                  <div class="node-info">
+                    <span class="node-label">TRIGGER</span>
+                    <span class="node-name">Email Trigger (IMAP)</span>
+                  </div>
+                  <span class="node-status-dot pulse"></span>
+                </div>
+
+                <!-- Process Node -->
+                <div class="flow-node-card flow-node-card--process" id="node-process">
+                  <div class="node-icon">
+                    <img src="reference/SVGs/chart-pie.svg" alt="" aria-hidden="true" width="16" height="16" />
+                  </div>
+                  <div class="node-info">
+                    <span class="node-label">PROCESSING</span>
+                    <span class="node-name">Data Extraction</span>
+                  </div>
+                  <div class="node-progress-circle-wrap">
+                    <svg viewBox="0 0 36 36" class="node-progress-circle">
+                      <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path class="circle" id="node-progress-bar" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    </svg>
+                    <span class="node-progress-pct" id="node-progress-pct">0%</span>
+                  </div>
+                </div>
+
+                <!-- CRM Output Node -->
+                <div class="flow-node-card flow-node-card--output" id="node-crm">
+                  <div class="node-icon">
+                    <img src="reference/SVGs/link-solid.svg" alt="" aria-hidden="true" width="16" height="16" />
+                  </div>
+                  <div class="node-info">
+                    <span class="node-label">ACTION</span>
+                    <span class="node-name">CRM Update</span>
+                  </div>
+                  <span class="node-status-dot"></span>
+                </div>
+
+                <!-- Analytics Output Node -->
+                <div class="flow-node-card flow-node-card--output" id="node-analytics">
+                  <div class="node-icon">
+                    <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="16" height="16" />
+                  </div>
+                  <div class="node-info">
+                    <span class="node-label">ACTION</span>
+                    <span class="node-name">Analytics Push</span>
+                  </div>
+                  <span class="node-status-dot"></span>
+                </div>
               </div>
-              <div class="flow-node flow-node--output">
-                <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="16" height="16" />
-                <span>Analytics Push</span>
+            </div>
+
+            <!-- Telemetry HUD -->
+            <div class="flow-telemetry-hud">
+              <div class="hud-header">
+                <span class="hud-title">telemetry_agent.log</span>
+              </div>
+              <div class="hud-console" id="agent-console">
+                <div class="console-line text-muted">[17:12:01] System boot sequence initiated...</div>
+                <div class="console-line text-success">[17:12:02] Daemon listening for IMAP events...</div>
               </div>
             </div>
           </div>
@@ -444,32 +525,69 @@
 
         <!-- Chat Panel -->
         <div class="demo-panel demo-panel--hidden" id="panel-chat" role="tabpanel" aria-labelledby="tab-chat" hidden>
-          <div class="chat-canvas" aria-label="AI Chat interface">
-            <div class="chat-sphere" aria-hidden="true">
-              <div class="sphere-core"></div>
-              <div class="sphere-ring sphere-ring--1"></div>
-              <div class="sphere-ring sphere-ring--2"></div>
-              <div class="sphere-ring sphere-ring--3"></div>
+          <div class="chat-layout">
+            <!-- Left Side: Interactive Holographic Sphere HUD -->
+            <div class="chat-orb-container">
+              <div class="orb-telemetry-decor" aria-hidden="true">
+                <span class="decor-line decor-line--l"></span>
+                <span class="decor-line decor-line--r"></span>
+              </div>
+              <div class="chat-sphere" id="daemon-orb" aria-hidden="true">
+                <div class="sphere-grid"></div>
+                <div class="sphere-core"></div>
+                <div class="sphere-ring sphere-ring--1"></div>
+                <div class="sphere-ring sphere-ring--2"></div>
+                <div class="sphere-ring sphere-ring--3"></div>
+                <div class="sphere-ring sphere-ring--4"></div>
+              </div>
+              <div class="orb-status">
+                <span class="orb-status-dot pulse"></span>
+                <span class="orb-status-text">DAEMON AI ACTIVE</span>
+              </div>
+              <!-- AI Telemetry HUD -->
+              <div class="orb-telemetry-hud">
+                <div class="telemetry-stat">
+                  <span class="telemetry-label">CORE TEMP</span>
+                  <span class="telemetry-val" id="orb-temp">41.2°C</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="telemetry-label">NEURAL THREADS</span>
+                  <span class="telemetry-val" id="orb-threads">512/512</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="telemetry-label">LATENCY</span>
+                  <span class="telemetry-val">12ms</span>
+                </div>
+                <div class="telemetry-stat">
+                  <span class="telemetry-label">ACTIVE NODE</span>
+                  <span class="telemetry-val text-yellow" id="orb-node">ROUTER</span>
+                </div>
+              </div>
             </div>
-            <div class="chat-messages" aria-live="polite">
-              <div class="chat-msg chat-msg--ai">
-                <strong>Daemon AI</strong>
-                <p>I've analyzed your pipeline. Revenue forecasting accuracy improved by 34% after deploying the sentiment model.</p>
+
+            <!-- Right Side: Chat Console -->
+            <div class="chat-console">
+              <div class="chat-messages" id="chat-messages-container" aria-live="polite">
+                <div class="chat-msg chat-msg--ai">
+                  <div class="chat-avatar"></div>
+                  <div class="chat-msg-content">
+                    <strong>Daemon AI</strong>
+                    <p>Welcome back. Forecasting models are fully optimized. What pipeline metrics would you like to review?</p>
+                  </div>
+                </div>
               </div>
-              <div class="chat-msg chat-msg--user">
-                <strong>You</strong>
-                <p>What's next to optimize?</p>
+              <!-- Suggestion Chips -->
+              <div class="chat-suggestions">
+                <button class="chat-chip" data-query="Audit latency">⚡ Audit latency</button>
+                <button class="chat-chip" data-query="Check model routing">🤖 Check model routing</button>
+                <button class="chat-chip" data-query="Starter vs Pro limits">📊 Starter vs Pro limits</button>
               </div>
-              <div class="chat-msg chat-msg--ai">
-                <strong>Daemon AI</strong>
-                <p>Recommend integrating the CRM webhook — estimated 18% reduction in manual ticket handling.</p>
+              <div class="chat-input-bar">
+                <input type="text" placeholder="Ask Daemon AI anything..." aria-label="Chat input" class="chat-input" id="chat-input-field" />
+                <button class="btn btn-primary chat-send" id="chat-send-btn" aria-label="Send message">
+                  <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="16" height="16" />
+                </button>
               </div>
-            </div>
-            <div class="chat-input-bar">
-              <input type="text" placeholder="Ask Daemon AI anything..." aria-label="Chat input" class="chat-input" />
-              <button class="btn btn-primary chat-send" aria-label="Send message">
-                <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="16" height="16" />
-              </button>
             </div>
           </div>
         </div>
@@ -849,7 +967,7 @@
 
       <nav class="footer-nav" aria-label="Footer navigation">
         <div class="footer-nav-col">
-          <h4 class="footer-nav-heading">Product</h4>
+          <h3 class="footer-nav-heading">Product</h3>
           <ul role="list">
             <li><a href="#features" class="footer-link">Features</a></li>
             <li><a href="#product" class="footer-link">How It Works</a></li>
@@ -858,7 +976,7 @@
           </ul>
         </div>
         <div class="footer-nav-col">
-          <h4 class="footer-nav-heading">Company</h4>
+          <h3 class="footer-nav-heading">Company</h3>
           <ul role="list">
             <li><a href="#case-studies" class="footer-link">Case Studies</a></li>
             <li><a href="#blog" class="footer-link">Blog</a></li>
@@ -867,7 +985,7 @@
           </ul>
         </div>
         <div class="footer-nav-col">
-          <h4 class="footer-nav-heading">Legal</h4>
+          <h3 class="footer-nav-heading">Legal</h3>
           <ul role="list">
             <li><a href="#" class="footer-link">Privacy Policy</a></li>
             <li><a href="#" class="footer-link">Terms of Service</a></li>
