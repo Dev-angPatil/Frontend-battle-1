@@ -847,6 +847,63 @@ function initMarqueeControls() {
   }
 }
 
+function initSearchModal() {
+  const searchBtn = document.getElementById('nav-search-btn');
+  const searchModal = document.getElementById('search-modal');
+  const backdrop = document.getElementById('search-modal-backdrop');
+  const closeBtn = document.getElementById('search-modal-close');
+  const searchInput = document.getElementById('search-input');
+  
+  if (!searchBtn || !searchModal || !backdrop || !closeBtn) return;
+
+  function openSearch() {
+    searchModal.removeAttribute('hidden');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      if (searchInput) searchInput.focus();
+    }, 50);
+  }
+
+  function closeSearch() {
+    searchModal.setAttribute('hidden', '');
+    document.body.style.overflow = '';
+  }
+
+  searchBtn.addEventListener('click', openSearch);
+  backdrop.addEventListener('click', closeSearch);
+  closeBtn.addEventListener('click', closeSearch);
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !searchModal.hasAttribute('hidden')) {
+      closeSearch();
+    }
+  });
+
+  // Simple filtering logic inside search modal
+  if (searchInput) {
+    searchInput.addEventListener('input', () => {
+      const query = searchInput.value.toLowerCase().trim();
+      const items = document.querySelectorAll('.search-result-item');
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    });
+  }
+
+  // Close modal when clicking a search result link
+  document.querySelectorAll('.search-result-item').forEach(item => {
+    item.addEventListener('click', () => {
+      closeSearch();
+    });
+  });
+}
+
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   initPricing();
@@ -862,4 +919,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initAgentFlowSimulation();
   initInteractiveChat();
   initMarqueeControls();
+  initSearchModal();
 });

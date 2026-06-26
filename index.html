@@ -78,6 +78,9 @@
       </ul>
 
       <div class="nav-actions">
+        <button class="nav-search-btn" id="nav-search-btn" aria-label="Search site">
+          <img src="reference/SVGs/search.svg" alt="" aria-hidden="true" width="18" height="18" />
+        </button>
         <a href="#pricing" class="btn btn-primary nav-cta">Get Started</a>
         <button class="hamburger-btn" id="hamburger-btn" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
           <span class="hamburger-line"></span>
@@ -1002,6 +1005,31 @@
       </button>
     </div>
   </footer>
+
+  <!-- Search Modal -->
+  <div class="search-modal" id="search-modal" role="dialog" aria-modal="true" aria-labelledby="search-modal-title" hidden>
+    <div class="search-modal-backdrop" id="search-modal-backdrop"></div>
+    <div class="search-modal-container">
+      <div class="search-modal-header">
+        <img src="reference/SVGs/search.svg" alt="" aria-hidden="true" width="20" height="20" class="search-modal-icon" />
+        <input type="text" id="search-input" class="search-input" placeholder="Search documentation, features, guides..." aria-label="Search site" />
+        <button class="search-modal-close" id="search-modal-close" aria-label="Close search">
+          <img src="reference/SVGs/x-mark.svg" alt="" aria-hidden="true" width="18" height="18" />
+        </button>
+      </div>
+      <div class="search-modal-results" id="search-modal-results">
+        <div class="search-results-section">
+          <h4 class="search-results-heading">Suggested Pages</h4>
+          <ul class="search-results-list" role="list">
+            <li><a href="#features" class="search-result-item"><img src="reference/SVGs/cube-16-solid.svg" alt="" aria-hidden="true" width="14" height="14" /> Features &amp; Bento Grid</a></li>
+            <li><a href="#product" class="search-result-item"><img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="14" height="14" /> Multi-Agent Systems &amp; Workflows</a></li>
+            <li><a href="#case-studies" class="search-result-item"><img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="14" height="14" /> Case Studies &amp; Performance</a></li>
+            <li><a href="#pricing" class="search-result-item"><img src="reference/SVGs/link-solid.svg" alt="" aria-hidden="true" width="14" height="14" /> Pricing Plans &amp; ROI Calculator</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="app.js" defer></script>
 </body>
