@@ -598,33 +598,31 @@ function initAgentFlowSimulation() {
   const processCard = document.getElementById('node-process');
   const crmCard = document.getElementById('node-crm');
   const analyticsCard = document.getElementById('node-analytics');
-  const consoleEl = document.getElementById('agent-console');
   const progressPath = document.getElementById('node-progress-bar');
   const progressPct = document.getElementById('node-progress-pct');
   const svgConnections = document.querySelectorAll('.flow-line-pulse');
   const orbNode = document.getElementById('orb-node');
 
-  if (!triggerCard || !processCard || !consoleEl) return;
+  // Inspector elements
+  const badge = document.getElementById('inspector-badge');
+  const cardTrigger = document.getElementById('state-card-trigger');
+  const cardProcess = document.getElementById('state-card-process');
+  const cardAction = document.getElementById('state-card-action');
+  const triggerStatus = document.getElementById('state-trigger-status');
+  const processStatus = document.getElementById('state-process-status');
+  const processConfidence = document.getElementById('state-process-confidence');
+  const processBar = document.getElementById('state-process-bar');
+  const actionStatus = document.getElementById('state-action-status');
+  const crmStatus = document.getElementById('state-crm-status');
+  const telemetryStatus = document.getElementById('state-telemetry-status');
+
+  if (!triggerCard || !processCard) return;
 
   let currentStep = 0;
 
   function updateOrbNode(state) {
     if (orbNode) {
       orbNode.textContent = state;
-    }
-  }
-
-  function addLog(text, type = 'muted') {
-    const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const line = document.createElement('div');
-    line.className = `console-line text-${type}`;
-    line.textContent = `[${time}] ${text}`;
-    consoleEl.appendChild(line);
-    consoleEl.scrollTop = consoleEl.scrollHeight;
-
-    // Limit log lines to 12
-    if (consoleEl.children.length > 12) {
-      consoleEl.removeChild(consoleEl.firstChild);
     }
   }
 
@@ -643,8 +641,29 @@ function initAgentFlowSimulation() {
         triggerCard.classList.add('active-run');
         svgConnections[0].classList.add('active'); // Line 1
         updateOrbNode('TRIGGER');
-        addLog('[TRIGGER] IMAP webhook listener triggered.', 'warning');
-        addLog('[TRIGGER] Input payload: invoice_forecast_Q2.pdf detected.', 'muted');
+
+        // Update inspector visual state
+        if (badge) {
+          badge.textContent = 'Active';
+          badge.classList.remove('idle');
+        }
+        if (cardTrigger) {
+          cardTrigger.className = 'state-card active-run';
+        }
+        if (triggerStatus) triggerStatus.textContent = 'Detected';
+        if (cardProcess) {
+          cardProcess.className = 'state-card';
+        }
+        if (processStatus) processStatus.textContent = 'Awaiting...';
+        if (processConfidence) processConfidence.textContent = '--';
+        if (processBar) processBar.style.width = '0%';
+        if (cardAction) {
+          cardAction.className = 'state-card';
+        }
+        if (actionStatus) actionStatus.textContent = 'Awaiting...';
+        if (crmStatus) crmStatus.textContent = 'Pending';
+        if (telemetryStatus) telemetryStatus.textContent = 'Pending';
+
         currentStep = 1;
         setTimeout(runSequence, 2500);
         break;
@@ -654,16 +673,27 @@ function initAgentFlowSimulation() {
         processCard.classList.add('active-run');
         updateOrbNode('PROCESSING');
 
+        // Update inspector visual state
+        if (cardTrigger) {
+          cardTrigger.className = 'state-card active-run state-card--success';
+        }
+        if (triggerStatus) triggerStatus.textContent = 'Verified ✓';
+        if (cardProcess) {
+          cardProcess.className = 'state-card active-run';
+        }
+
         // Progress bar simulation
         let pct = 0;
-        addLog('[PROCESS] Initializing layout parsing & OCR extraction...', 'info');
         const interval = setInterval(() => {
           pct += 10;
           if (progressPath) progressPath.setAttribute('stroke-dasharray', `${pct}, 100`);
           if (progressPct) progressPct.textContent = `${pct}%`;
+          if (processStatus) processStatus.textContent = `${pct}%`;
+          if (processBar) processBar.style.width = `${pct}%`;
+          
           if (pct >= 100) {
             clearInterval(interval);
-            addLog('[PROCESS] Extraction successful. Confidence Score: 99.85%', 'success');
+            if (processConfidence) processConfidence.textContent = '99.85%';
             currentStep = 2;
             setTimeout(runSequence, 1000);
           }
@@ -679,12 +709,26 @@ function initAgentFlowSimulation() {
         analyticsCard.classList.add('active-run');
         updateOrbNode('ACTION');
 
-        addLog('[ACTION] Synchronizing CRM (Salesforce API)...', 'info');
-        addLog('[ACTION] Syncing Telemetry (AWS CloudWatch)...', 'info');
+        // Update inspector visual state
+        if (cardProcess) {
+          cardProcess.className = 'state-card active-run state-card--success';
+        }
+        if (processStatus) processStatus.textContent = 'Parsed ✓';
+        if (cardAction) {
+          cardAction.className = 'state-card active-run';
+        }
+        if (actionStatus) actionStatus.textContent = 'Syncing...';
+        if (crmStatus) crmStatus.textContent = 'Syncing...';
+        if (telemetryStatus) telemetryStatus.textContent = 'Syncing...';
 
         setTimeout(() => {
-          addLog('[ACTION] Salesforce CRM updated successfully.', 'success');
-          addLog('[ACTION] Telemetry metrics pushed: +34% accuracy.', 'success');
+          if (crmStatus) crmStatus.textContent = 'Synced ✓';
+          if (telemetryStatus) telemetryStatus.textContent = 'Synced ✓';
+          if (cardAction) {
+            cardAction.className = 'state-card active-run state-card--success';
+          }
+          if (actionStatus) actionStatus.textContent = 'Complete ✓';
+          
           currentStep = 3;
           setTimeout(runSequence, 3000);
         }, 1500);
@@ -693,7 +737,23 @@ function initAgentFlowSimulation() {
       case 3: // Cooldown/Reset
         resetAll();
         updateOrbNode('IDLE');
-        addLog('[SYSTEM] Pipeline idle. Awaiting next payload...', 'muted');
+
+        // Update inspector visual state
+        if (badge) {
+          badge.textContent = 'Idle';
+          badge.classList.add('idle');
+        }
+        if (cardTrigger) cardTrigger.className = 'state-card';
+        if (triggerStatus) triggerStatus.textContent = 'Awaiting...';
+        if (cardProcess) cardProcess.className = 'state-card';
+        if (processStatus) processStatus.textContent = 'Awaiting...';
+        if (processConfidence) processConfidence.textContent = '--';
+        if (processBar) processBar.style.width = '0%';
+        if (cardAction) cardAction.className = 'state-card';
+        if (actionStatus) actionStatus.textContent = 'Awaiting...';
+        if (crmStatus) crmStatus.textContent = 'Pending';
+        if (telemetryStatus) telemetryStatus.textContent = 'Pending';
+
         currentStep = 0;
         setTimeout(runSequence, 4000);
         break;

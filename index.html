@@ -479,13 +479,81 @@
             </div>
 
             <!-- Telemetry HUD -->
-            <div class="flow-telemetry-hud">
-              <div class="hud-header">
-                <span class="hud-title">telemetry_agent.log</span>
+            <!-- Telemetry Inspector -->
+            <div class="agent-telemetry-inspector">
+              <div class="inspector-header">
+                <span class="inspector-title">Telemetry Monitor</span>
+                <span class="inspector-badge" id="inspector-badge">Active</span>
               </div>
-              <div class="hud-console" id="agent-console">
-                <div class="console-line text-muted">[17:12:01] System boot sequence initiated...</div>
-                <div class="console-line text-success">[17:12:02] Daemon listening for IMAP events...</div>
+              
+              <div class="inspector-content">
+                <!-- Metadata Dashboard Grid -->
+                <div class="inspector-meta-grid">
+                  <div class="meta-card">
+                    <span class="meta-label">ROUTING MODEL</span>
+                    <span class="meta-val">GPT-4o (optimized)</span>
+                  </div>
+                  <div class="meta-card">
+                    <span class="meta-label">AVG LATENCY</span>
+                    <span class="meta-val">12.4ms</span>
+                  </div>
+                </div>
+
+                <!-- Active State Card Container -->
+                <div class="inspector-state-container">
+                  <div class="state-card" id="state-card-trigger">
+                    <div class="state-card-header">
+                      <img src="reference/SVGs/arrow-path.svg" alt="" width="14" height="14" class="state-icon" />
+                      <span>Webhook Payload</span>
+                      <span class="state-status-text" id="state-trigger-status">Awaiting...</span>
+                    </div>
+                    <div class="state-card-body">
+                      <div class="payload-field">
+                        <span class="field-key">Source</span>
+                        <span class="field-value">IMAP Webhook</span>
+                      </div>
+                      <div class="payload-field">
+                        <span class="field-key">File</span>
+                        <span class="field-value text-yellow">invoice_forecast_Q2.pdf</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="state-card" id="state-card-process">
+                    <div class="state-card-header">
+                      <img src="reference/SVGs/chart-pie.svg" alt="" width="14" height="14" class="state-icon" />
+                      <span>OCR Parsing Engine</span>
+                      <span class="state-status-text" id="state-process-status">Awaiting...</span>
+                    </div>
+                    <div class="state-card-body">
+                      <div class="payload-field">
+                        <span class="field-key">Confidence</span>
+                        <span class="field-value text-green" id="state-process-confidence">--</span>
+                      </div>
+                      <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill" id="state-process-bar"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="state-card" id="state-card-action">
+                    <div class="state-card-header">
+                      <img src="reference/SVGs/link-solid.svg" alt="" width="14" height="14" class="state-icon" />
+                      <span>Downstream Actions</span>
+                      <span class="state-status-text" id="state-action-status">Awaiting...</span>
+                    </div>
+                    <div class="state-card-body">
+                      <div class="payload-field">
+                        <span class="field-key">Salesforce API</span>
+                        <span class="field-value text-green" id="state-crm-status">Pending</span>
+                      </div>
+                      <div class="payload-field">
+                        <span class="field-key">AWS CloudWatch</span>
+                        <span class="field-value text-green" id="state-telemetry-status">Pending</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -832,6 +900,7 @@
 
         <details class="faq-item">
           <summary class="faq-summary">
+            <img src="reference/SVGs/cube-16-solid.svg" alt="" aria-hidden="true" width="16" height="16" class="faq-question-icon" />
             <h3 class="faq-question">What AI models does Armory support?</h3>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="faq-chevron" />
           </summary>
@@ -839,9 +908,10 @@
             <p>Armory integrates natively with GPT-4 Turbo, Claude 3 Opus, Gemini Ultra, and Perplexity. You can also connect any OpenAI-compatible endpoint, including locally hosted models via Ollama or vLLM.</p>
           </div>
         </details>
-
+ 
         <details class="faq-item">
           <summary class="faq-summary">
+            <img src="reference/SVGs/arrow-trending-up.svg" alt="" aria-hidden="true" width="16" height="16" class="faq-question-icon" />
             <h3 class="faq-question">How does the annual billing discount work?</h3>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="faq-chevron" />
           </summary>
@@ -849,9 +919,10 @@
             <p>Annual plans are billed upfront at a flat 20% discount compared to the monthly rate. You can switch between billing cycles at any time — unused credit is prorated automatically.</p>
           </div>
         </details>
-
+ 
         <details class="faq-item">
           <summary class="faq-summary">
+            <img src="reference/SVGs/link-solid.svg" alt="" aria-hidden="true" width="16" height="16" class="faq-question-icon" />
             <h3 class="faq-question">Is Armory SOC 2 compliant?</h3>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="faq-chevron" />
           </summary>
@@ -859,9 +930,10 @@
             <p>Yes. Enterprise tier customers receive full SOC 2 Type II compliance documentation, GDPR data processing agreements, and on-premise deployment options for sensitive data environments.</p>
           </div>
         </details>
-
+ 
         <details class="faq-item">
           <summary class="faq-summary">
+            <img src="reference/SVGs/arrow-path.svg" alt="" aria-hidden="true" width="16" height="16" class="faq-question-icon" />
             <h3 class="faq-question">Can I migrate from another automation platform?</h3>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="faq-chevron" />
           </summary>
@@ -869,9 +941,10 @@
             <p>Absolutely. We provide migration tooling for n8n, Zapier, and Make workflows. Our engineering team offers white-glove migration support for Enterprise tier customers at no additional cost.</p>
           </div>
         </details>
-
+ 
         <details class="faq-item">
           <summary class="faq-summary">
+            <img src="reference/SVGs/cog-8-tooth.svg" alt="" aria-hidden="true" width="16" height="16" class="faq-question-icon" />
             <h3 class="faq-question">What happens if I exceed my API call limit?</h3>
             <img src="reference/SVGs/chevron-down.svg" alt="" aria-hidden="true" width="20" height="20" class="faq-chevron" />
           </summary>
