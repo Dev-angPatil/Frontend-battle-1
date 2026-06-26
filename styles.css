@@ -694,9 +694,9 @@ input, select, textarea {
 }
 
 
-/* Stats Dashboard Bento Layout — 3 equal cols top, full-width bottom */
+/* Stats Dashboard Bento Layout — 2 equal cols top, full-width bottom */
 .bento-stat-card {
-  grid-column: span 4; /* each top card spans 4 of 12 cols */
+  grid-column: span 6; /* each top card spans 6 of 12 cols */
 }
 
 .bento-stat-card--wide {
