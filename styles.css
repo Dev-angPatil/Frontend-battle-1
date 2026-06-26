@@ -636,7 +636,7 @@ input, select, textarea {
 /* BENTO GRID */
 .bento-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   grid-template-rows: auto auto;
   gap: 16px;
   margin-top: var(--space-xl);
@@ -678,18 +678,24 @@ input, select, textarea {
   opacity: 1;
 }
 
-/* Bento Grid Layout */
+/* Bento Grid Layout — 12-col grid, no overlap */
 .bento-card--wide {
-  grid-column: 1 / 3;
+  grid-column: 1 / 7;   /* cols 1-6 */
 }
 
 .bento-card--tall {
   grid-row: 1 / 3;
-  grid-column: 3;
+  grid-column: 7 / 10;  /* cols 7-9 */
+}
+
+/* Training card: row 2, cols 1-6 */
+.bento-card:nth-child(3) {
+  grid-column: 1 / 7;
 }
 
 .bento-card--accent {
-  grid-column: 4;
+  grid-column: 10 / 13; /* cols 10-12 */
+  grid-row: 1 / 3;       /* spans 2 rows */
   background: var(--nocturnal-exp);
 }
 
@@ -1069,6 +1075,7 @@ details[open] .accordion-summary {
   border-top: 1px solid var(--border-light);
 }
 
+/* Hover image reveal — like reference demo */
 .case-study-row {
   display: grid;
   grid-template-columns: 200px 100px 1fr auto;
@@ -1076,8 +1083,44 @@ details[open] .accordion-summary {
   gap: var(--space-lg);
   padding: var(--space-xl) 0;
   border-bottom: 1px solid var(--border-light);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
   transition: background var(--dur-hover) var(--ease-out);
 }
+
+/* Parallax hover bg image reveal */
+.case-study-row::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(1) contrast(1.1);
+  mix-blend-mode: multiply;
+  transition: opacity 0.4s var(--ease-out), transform 0.6s var(--ease-out);
+  transform: scale(1.04);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.case-study-row:hover::after {
+  opacity: 0.18;
+  transform: scale(1);
+}
+
+.case-study-row--cigna::after {
+  background-image: linear-gradient(135deg, var(--nocturnal-exp), #0a3040);
+}
+.case-study-row--aetna::after {
+  background-image: linear-gradient(135deg, #1a0535, var(--oceanic-noir));
+}
+.case-study-row--anthem::after {
+  background-image: linear-gradient(135deg, var(--oceanic-noir), #0d1f2d);
+}
+
+.case-study-row > * { position: relative; z-index: 1; }
 
 .case-study-row--alt {
   background: rgba(217,232,226,0.5);
@@ -1086,6 +1129,14 @@ details[open] .accordion-summary {
 .case-study-row:hover {
   background: var(--mystic-mint);
 }
+
+/* Row entrance animation on scroll */
+.case-study-row {
+  --row-delay: 0ms;
+}
+.case-study-row:nth-child(1) { --row-delay: 0ms; }
+.case-study-row:nth-child(2) { --row-delay: 80ms; }
+.case-study-row:nth-child(3) { --row-delay: 160ms; }
 
 .case-study-figure { margin: 0; }
 
@@ -1097,6 +1148,10 @@ details[open] .accordion-summary {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform var(--dur-hover) var(--ease-out);
+}
+.case-study-row:hover .case-study-logo-placeholder {
+  transform: scale(1.03);
 }
 .case-study-logo-placeholder span {
   font-family: var(--font-mono);
@@ -1120,6 +1175,11 @@ details[open] .accordion-summary {
   color: var(--oceanic-noir);
   margin-bottom: var(--space-xs);
   letter-spacing: -0.01em;
+  transition: color var(--dur-hover) var(--ease-out), transform var(--dur-hover) var(--ease-out);
+}
+.case-study-row:hover .case-study-title {
+  color: var(--nocturnal-exp);
+  transform: translateX(4px);
 }
 
 .case-study-desc {
@@ -1784,15 +1844,29 @@ details[open] .faq-chevron {
 /* ── 17. SCROLL REVEAL ANIMATIONS ──────────────────────────────── */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity var(--dur-structural) var(--ease-in-out),
-              transform var(--dur-structural) var(--ease-in-out);
+  transform: translateY(32px);
+  transition: opacity 0.55s var(--ease-in-out),
+              transform 0.55s var(--ease-in-out);
 }
 
 .reveal.revealed {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Staggered reveal for grid children */
+.bento-card.reveal:nth-child(1) { transition-delay: 0ms; }
+.bento-card.reveal:nth-child(2) { transition-delay: 80ms; }
+.bento-card.reveal:nth-child(3) { transition-delay: 160ms; }
+.bento-card.reveal:nth-child(4) { transition-delay: 240ms; }
+
+.pricing-card.reveal:nth-child(1) { transition-delay: 0ms; }
+.pricing-card.reveal:nth-child(2) { transition-delay: 100ms; }
+.pricing-card.reveal:nth-child(3) { transition-delay: 200ms; }
+
+.case-study-row.reveal:nth-child(1) { transition-delay: 0ms; }
+.case-study-row.reveal:nth-child(2) { transition-delay: 80ms; }
+.case-study-row.reveal:nth-child(3) { transition-delay: 160ms; }
 
 .reveal-delay-1 { transition-delay: 100ms; }
 .reveal-delay-2 { transition-delay: 200ms; }
@@ -1808,6 +1882,16 @@ details[open] .faq-chevron {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
 /* Hero entrance */
 .hero-content > * {
   animation: slideUp var(--dur-structural) var(--ease-in-out) both;
@@ -1820,8 +1904,33 @@ details[open] .faq-chevron {
 .hero-content > *:nth-child(6) { animation-delay: 320ms; }
 
 .hero-visual {
-  animation: slideUp var(--dur-structural) var(--ease-in-out) 200ms both;
+  animation: scaleIn 0.55s var(--ease-in-out) 200ms both;
 }
+
+/* Section eyebrow slide-in */
+.section-eyebrow {
+  animation: slideInLeft 0.4s var(--ease-out) both;
+}
+
+/* Pricing card featured pulse glow */
+.pricing-card--featured {
+  animation: featuredGlow 4s ease-in-out infinite;
+}
+
+@keyframes featuredGlow {
+  0%, 100% { box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,200,1,0.2), 0 0 0 rgba(255,200,1,0); }
+  50%       { box-shadow: 0 32px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,200,1,0.4), 0 0 40px rgba(255,200,1,0.08); }
+}
+
+/* Flow node entrance */
+.flow-node {
+  animation: slideUp 0.4s var(--ease-in-out) both;
+}
+.flow-node:nth-child(1) { animation-delay: 100ms; }
+.flow-node:nth-child(2) { animation-delay: 200ms; }
+.flow-node:nth-child(3) { animation-delay: 300ms; }
+.flow-node:nth-child(4) { animation-delay: 380ms; }
+.flow-node:nth-child(5) { animation-delay: 450ms; }
 
 /* ── 18. REDUCED MOTION ──────────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
@@ -1849,7 +1958,8 @@ details[open] .faq-chevron {
   }
   .bento-card--wide { grid-column: 1 / 3; }
   .bento-card--tall { grid-row: auto; grid-column: auto; }
-  .bento-card--accent { grid-column: auto; }
+  .bento-card--accent { grid-column: auto; grid-row: auto; }
+  .bento-card:nth-child(3) { grid-column: auto; }
 
   .pricing-cards {
     grid-template-columns: 1fr;
@@ -1891,6 +2001,15 @@ details[open] .faq-chevron {
   /* Switch to accordion on mobile */
   .bento-grid { display: none; }
   .features-accordion { display: flex; }
+
+  /* Reset all bento column overrides on mobile (hidden anyway) */
+  .bento-card--wide,
+  .bento-card--tall,
+  .bento-card--accent,
+  .bento-card:nth-child(3) {
+    grid-column: auto;
+    grid-row: auto;
+  }
 
   .case-study-row {
     grid-template-columns: 1fr;
